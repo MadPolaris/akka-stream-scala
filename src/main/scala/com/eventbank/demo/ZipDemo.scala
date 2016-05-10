@@ -9,8 +9,8 @@ import akka.util.Timeout
 import scala.concurrent.duration._
 
 /**
-  * Created by Barry on 4/20/16.
-  */
+ * Created by Barry on 4/20/16.
+ */
 object ZipDemo extends App {
 
   implicit val sys = ActorSystem("TheDemo")
@@ -23,14 +23,15 @@ object ZipDemo extends App {
 
   //  numbers.zip(strings).runForeach(println)
 
-  val sourceGraph = GraphDSL.create(numbers, strings)((n, s) => (n, s)) { implicit builder => (n, s) =>
-    import GraphDSL.Implicits._
-    val zip = builder.add(Zip[Int, String]())
+  val sourceGraph = GraphDSL.create(numbers, strings)((n, s) => (n, s)) { implicit builder =>
+    (n, s) =>
+      import GraphDSL.Implicits._
+      val zip = builder.add(Zip[Int, String]())
 
-    n ~> zip.in0
-    s ~> zip.in1
+      n ~> zip.in0
+      s ~> zip.in1
 
-    SourceShape(zip.out)
+      SourceShape(zip.out)
   }
 
   val graph = GraphDSL.create() { implicit builder =>
@@ -51,12 +52,12 @@ object ZipDemo extends App {
     FlowShape(zip.in0, zip.out)
   }
 
-
-  val flowGraph2 = GraphDSL.create(strings) { implicit builder => r =>
-    import GraphDSL.Implicits._
-    val zip = builder.add(Zip[Int, String]())
-    r ~> zip.in1
-    FlowShape(zip.in0, zip.out)
+  val flowGraph2 = GraphDSL.create(strings) { implicit builder =>
+    r =>
+      import GraphDSL.Implicits._
+      val zip = builder.add(Zip[Int, String]())
+      r ~> zip.in1
+      FlowShape(zip.in0, zip.out)
   }
 
   numbers

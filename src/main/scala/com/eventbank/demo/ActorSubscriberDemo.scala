@@ -1,14 +1,14 @@
 package com.eventbank.demo
 
 import akka.actor.Actor.Receive
-import akka.actor.{ActorSystem, Props}
+import akka.actor.{ ActorSystem, Props }
 import akka.stream.ActorMaterializer
-import akka.stream.actor.{ActorSubscriber, OneByOneRequestStrategy, RequestStrategy}
-import akka.stream.scaladsl.{Sink, Source}
+import akka.stream.actor.{ ActorSubscriber, OneByOneRequestStrategy, RequestStrategy }
+import akka.stream.scaladsl.{ Sink, Source }
 
 /**
-  * Created by Barry on 4/23/16.
-  */
+ * Created by Barry on 4/23/16.
+ */
 object ActorSubscriberDemo extends App {
 
   implicit val sys = ActorSystem("ActorSubscriberDemo")
@@ -30,7 +30,7 @@ object ActorSubscriberDemo extends App {
     .filter(_.length == 2)
     .drop(2)
     .groupBy(10, _.last)
-    //.to(Sink.actorSubscriber(Props(new ActorDemo)))
-    .run()
+  //.to(Sink.actorSubscriber(Props(new ActorDemo)))
+  //    .run()
 
 }

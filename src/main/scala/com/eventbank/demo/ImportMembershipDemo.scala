@@ -8,8 +8,8 @@ import akka.stream.scaladsl._
 import scala.concurrent.Future
 
 /**
-  * Created by Barry on 4/22/16.
-  */
+ * Created by Barry on 4/22/16.
+ */
 object ImportMembershipDemo extends App {
 
   implicit val sys = ActorSystem("ImportMembershipDemo")
@@ -45,8 +45,8 @@ object ImportMembershipDemo extends App {
     .to(out).run()
 
   private def broadcastAndThenZip[Input, Output1, Output2, Output3](g1: Graph[FlowShape[Input, Output1], Any],
-                                                                    g2: Graph[FlowShape[Input, Output2], Any],
-                                                                    g3: Graph[FlowShape[Input, Output3], Any]) =
+    g2: Graph[FlowShape[Input, Output2], Any],
+    g3: Graph[FlowShape[Input, Output3], Any]) =
     GraphDSL.create() { implicit builder =>
       import GraphDSL.Implicits._
       val bcast = builder.add(Broadcast[Input](3))
@@ -78,6 +78,5 @@ object ImportMembershipDemo extends App {
     println(log)
     Future(tuple3._1)
   }
-
 
 }
