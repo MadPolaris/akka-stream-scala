@@ -26,26 +26,24 @@ object CopyMembershipApplicationFormStreamVersion extends App {
   implicit val materializer = ActorMaterializer()
 
   val query = BSONDocument("organizationId" -> 517, "type" -> "MembershipType:Individual")
-  //  val query = BSONDocument()
 
   srcFormColl.find(query).cursor[BSONDocument]().source()
     .mapAsync(4)(processForm)
     .mapAsync(4)(extractItemsFromForm)
     .runWith(Sink.foreach(processItems))
-    //    .runWith(Sink.foreach(println))
     .onComplete {
-    case t =>
-      println("completed" + t)
-    //System.exit(0)
-  }
+      case t =>
+        println("completed" + t)
+        System.exit(0)
+    }
 
-  def processForm: (BSONDocument) => Future[BSONDocument] = { document =>
+  private def processForm: (BSONDocument) => Future[BSONDocument] = { document =>
     targetFormColl.insert(document).map {
       case _ => document
     }
   }
 
-  def extractItemsFromForm(document: BSONDocument) = {
+  private def extractItemsFromForm(document: BSONDocument) = {
     val items = document.getAs[List[BSONDocument]]("items")
     val itemIds = items.get.map { item => item.getAs[String]("$id").get }
     val itemQuery = BSONDocument("_id" -> BSONDocument("$in" -> itemIds))
@@ -54,10 +52,9 @@ object CopyMembershipApplicationFormStreamVersion extends App {
       .collect[List]()
   }
 
-  def processItems: (List[BSONDocument]) => Unit = {
-    documents => documents.foreach {
-      targetItemColl.insert(_)
-    }
+  private def processItems: (List[BSONDocument]) => Unit = documents => documents.foreach {
+    targetItemColl.insert(_)
   }
+
 
 }
